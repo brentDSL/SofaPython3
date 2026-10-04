@@ -20,7 +20,16 @@ jobs:
       matrix:
         os: [ubuntu-22.04, macos-14, windows-2022]
         sofa_branch: [master]
-        python_version: ['3.10']
+        # oldest supported, the default SOFA ships with, and the newest
+        python_version: ['3.10', '3.12', '3.14']
+        include:
+          - python_version: '3.10'
+            pybind11_version: '2.12.0'
+          - python_version: '3.12'
+            pybind11_version: '2.12.0'
+          # pybind11 < 2.13 predates python 3.13 support
+          - python_version: '3.14'
+            pybind11_version: '3.1.0'
 
     steps:
       - name: Setup SOFA and environment
@@ -32,6 +41,7 @@ jobs:
           sofa_scope: 'standard'
           sofa_with_sofapython3: 'false'
           python_version: '${{ matrix.python_version }}'
+          pybind11_version: '${{ matrix.pybind11_version }}'
       
       - name: Checkout source code
         uses: actions/checkout@v2
